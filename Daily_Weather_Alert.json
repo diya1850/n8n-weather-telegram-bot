@@ -1,0 +1,99 @@
+{
+  "name": "Daily Weather Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7735d6c1-223e-4b3d-9d5a-a58e63991d69",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=Palakkad&appid=ae39d1def4c9efbdb833f86b7603cd1e&units=metric",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "93b2c965-b83d-4cd5-8a4e-091e4135f255",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "1004409804",
+        "text": "=Weather in Palakkad 🌦️\nTemperature: {{$json[\"main\"][\"temp\"]}}°C\nCondition: {{$json[\"weather\"][0][\"description\"]}}\n",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "f2950c6d-f861-48ef-a663-fbe3064dfc40",
+      "name": "Send a text message",
+      "webhookId": "9913ad40-98ca-4655-a2fc-450a571dbef8",
+      "credentials": {
+        "telegramApi": {
+          "id": "8TLbh4vXC1sG98zC",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0c34e543-85a1-422c-8558-a5ac57e81e19",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cc1e451048c1fece8e52aa08ce751e8b3d282fc6f46c20bb3d298c4b07343f58"
+  },
+  "id": "5YQLUdXNFR2QpBPv",
+  "tags": []
+}
